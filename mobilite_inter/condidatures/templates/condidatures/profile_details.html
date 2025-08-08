@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails du Profil</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .profile-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .profile-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .profile-table td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .profile-table td:first-child {
+            text-align: right;
+            color: #333;
+            font-weight: bold;
+            width: 40%;
+        }
+        .profile-table td:last-child {
+            text-align: left;
+            color: #555;
+            width: 60%;
+        }
+        .buttons {
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button#stat-btn {
+            background-color: #007bff;
+            color: white;
+        }
+        button#stat-btn:hover {
+            background-color: #0056b3;
+        }
+        button#logout-btn {
+            background-color: #dc3545; /* Rouge pour déconnexion */
+            color: white;
+        }
+        button#logout-btn:hover {
+            background-color: #c82333; /* Rouge plus foncé au survol */
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <h1>Bienvenue {{ request.user.username }}</h1>
+        <table class="profile-table">
+            <tr>
+                <td>Nom d'utilisateur :</td>
+                <td>{{ request.user.username }}</td>
+            </tr>
+            <tr>
+                <td>Identifiant :</td>
+                <td>{{ profile.identifiant }}</td>
+            </tr>
+            <tr>
+                <td>Moyenne :</td>
+                <td>{{ profile.moyenne }}</td>
+            </tr>
+            <tr>
+                <td>Langues :</td>
+                <td>{{ profile.langues }}</td>
+            </tr>
+            <tr>
+                <td>Activités :</td>
+                <td>{{ profile.activites|default:"Aucune activité" }}</td>
+            </tr>
+            <tr>
+                <td>Certificats :</td>
+                <td>{{ profile.certificats|default:"Aucun certificat" }}</td>
+            </tr>
+        </table>
+        <div class="buttons">
+            <button id="stat-btn" onclick="window.location.href='{% url 'stats' %}'">Statistiques</button>
+            <button id="logout-btn" onclick="window.location.href='{% url 'logout' %}'">Déconnexion</button>
+        </div>
+    </div>
+</body>
+</html>

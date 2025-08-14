@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des Offres de Stage</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; }
+        .dashboard-container { background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); max-width: 1200px; margin: 0 auto; }
+        h1 { color: #333; text-align: center; }
+        .offers-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .offers-table th, .offers-table td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+        .offers-table th { background-color: #007bff; color: white; }
+        .offers-table tr:nth-child(even) { background-color: #f2f2f2; }
+        .buttons { text-align: center; margin-top: 20px; }
+        button { padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1>Liste des Offres de Stage</h1>
+        <table class="offers-table">
+            <thead>
+                <tr>
+                    <th>Titre</th>
+                    <th>Entreprise</th>
+                    <th>Localisation</th>
+                    <th>Date Début</th>
+                    <th>Date Fin</th>
+                    <th>Date Publication</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for offre in offres %}
+                <tr>
+                    <td>{{ offre.titre }}</td>
+                    <td>{{ offre.entreprise }}</td>
+                    <td>{{ offre.localisation }}</td>
+                    <td>{{ offre.date_debut|date:"d/m/Y" }}</td>
+                    <td>{{ offre.date_fin|date:"d/m/Y" }}</td>
+                    <td>{{ offre.date_publication|date:"d/m/Y" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6">Aucune offre pour le moment.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="buttons">
+            <button onclick="window.location.href='{% url 'ajouter_offre' %}'">Ajouter une Offre</button>
+            <button onclick="window.location.href='{% url 'admin_dashboard' %}'">Retour</button>
+        </div>
+    </div>
+</body>
+</html>

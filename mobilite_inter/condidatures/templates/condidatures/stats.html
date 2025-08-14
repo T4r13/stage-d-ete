@@ -25,7 +25,7 @@
             text-align: center;
             margin: 0 auto;
         }
-        h1 {
+        h1, h2 {
             color: #333;
             margin-bottom: 20px;
         }
@@ -67,9 +67,6 @@
             width: 15px;
             padding: 0;
             background-color: #f2f2f2;
-        }
-        .stats-table tr {
-            width: 100%;
         }
         .stats-table tr:hover {
             background-color: #f8f9fa;
@@ -165,76 +162,44 @@
                 {% endfor %}
             </tbody>
         </table>
+
+        <!-- Section Candidatures -->
+        <h2>Vos Candidatures</h2>
+        {% if candidatures %}
+        <table class="stats-table">
+            <thead>
+                <tr>
+                    <th>Titre de l'offre</th>
+                    <th>Entreprise</th>
+                    <th>Lieu</th>
+                    <th>Date de début</th>
+                    <th>Date de fin</th>
+                    <th>Statut</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for candidature in candidatures %}
+                <tr>
+                    <td>{{ candidature.offre.titre }}</td>
+                    <td>{{ candidature.offre.entreprise }}</td>
+                    <td>{{ candidature.offre.localisation }}</td>
+                    <td>{{ candidature.offre.date_debut|date:"d/m/Y" }}</td>
+                    <td>{{ candidature.offre.date_fin|date:"d/m/Y" }}</td>
+                    <td>{{ candidature.statut|default:"En attente" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>Aucune candidature envoyée pour le moment.</p>
+        {% endif %}
+
         <div class="buttons">
             <button onclick="window.location.href='{% url 'profile_details' %}'">Retour</button>
         </div>
-        <div class="charts-container">
-            <div class="chart-item">
-                <h3>Pourcentage d'Acceptation</h3>
-                <div id="acceptanceChart"></div>
-            </div>
-            <div class="chart-item">
-                <h3>Pourcentage de Réussite</h3>
-                <div id="successChart"></div>
-            </div>
-            <div class="chart-item">
-                <h3>Autres Statistiques</h3>
-                <div id="otherStats"></div>
-            </div>
-        </div>
+
+        
     </div>
-    <!-- Inclure p5.js pour les graphiques -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
-    <script>
-        // Initialisation des graphiques (tous en lignes horizontales)
-        function setup() {
-            // Graphique pour Acceptation
-            let acceptanceCanvas = createCanvas(200, 200);
-            acceptanceCanvas.parent('acceptanceChart');
-            background(255);
-            stroke(255, 215, 0); // Or
-            strokeWeight(10);
-            let lineEndAccept = map(70, 0, 100, 20, 180); // 70%
-            line(20, 100, lineEndAccept, 100);
-            noStroke();
-            fill(0);
-            textAlign(CENTER, BOTTOM);
-            textSize(16);
-            text('70%', lineEndAccept, 90);
 
-            // Graphique pour Réussite
-            let successCanvas = createCanvas(200, 200);
-            successCanvas.parent('successChart');
-            background(255);
-            stroke(255, 215, 0); // Or
-            strokeWeight(10);
-            let lineEndSuccess = map(85, 0, 100, 20, 180); // 85%
-            line(20, 100, lineEndSuccess, 100);
-            noStroke();
-            fill(0);
-            textAlign(CENTER, BOTTOM);
-            textSize(16);
-            text('85%', lineEndSuccess, 90);
-
-            // Graphique pour Autres Statistiques
-            let otherCanvas = createCanvas(200, 200);
-            otherCanvas.parent('otherStats');
-            background(255);
-            stroke(255, 215, 0); // Or
-            strokeWeight(10);
-            let lineEndOther = map(50, 0, 100, 20, 180); // 50%
-            line(20, 100, lineEndOther, 100);
-            noStroke();
-            fill(0);
-            textAlign(CENTER, BOTTOM);
-            textSize(16);
-            text('50%', lineEndOther, 90);
-        }
-
-        // Lancer le setup au chargement
-        window.onload = function() {
-            setup();
-        };
-    </script>
 </body>
 </html>

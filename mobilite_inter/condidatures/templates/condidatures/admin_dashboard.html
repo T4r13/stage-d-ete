@@ -7,21 +7,27 @@
     <style>
         body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; }
         .dashboard-container { background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); max-width: 1200px; margin: 0 auto; }
-        h1 { color: #333; text-align: center; }
-        .year-header { text-align: center; color: #555; margin-bottom: 20px; }
-        .profiles-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        .profiles-table th, .profiles-table td { padding: 10px; border: 1px solid #ddd; text-align: left; }
-        .profiles-table th { background-color: #007bff; color: white; }
-        .profiles-table tr:nth-child(even) { background-color: #f2f2f2; }
-        .buttons { margin-top: 20px; }
-        button { padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
-        button:hover { background-color: #0056b3; }
+        h1, h2 { color: #333; text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #007bff; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        .buttons { margin-top: 20px; text-align: center; }
+        button, .btn-action { padding: 8px 14px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; }
+        button:hover, .btn-action:hover { background-color: #0056b3; }
+        .btn-accept { background-color: #28a745; }
+        .btn-accept:hover { background-color: #1e7e34; }
+        .btn-reject { background-color: #dc3545; }
+        .btn-reject:hover { background-color: #a71d2a; }
     </style>
 </head>
 <body>
     <div class="dashboard-container">
         <h1>Tableau de Bord Admin</h1>
-        <table class="profiles-table">
+
+        <!-- Section Profils Étudiants -->
+        <h2>Profils Étudiants</h2>
+        <table>
             <thead>
                 <tr>
                     <th>Nom d'utilisateur</th>
@@ -42,7 +48,7 @@
                     <td>{{ student.identifiant }}</td>
                     <td>{{ student.moyenne|default:"N/A" }}</td>
                     <td>{{ student.langues|default:"N/A" }}</td>
-                    <td>{{ student.activites }}</td>
+                    <td>{{ student.activites|default:"Aucune activité" }}</td>
                     <td>{{ student.score_final|default:"N/A" }}</td>
                     <td>{{ student.date_calcul|date:"d/m/Y" }}</td>
                     <td>{{ student.rang|default:"N/A" }}</td>
@@ -55,9 +61,72 @@
                 {% endfor %}
             </tbody>
         </table>
+
+        <!-- Section Candidatures -->
+        <h2>Candidatures</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nom d'utilisateur</th>
+                    <th>Offre</th>
+                    <th>Entreprise</th>
+                    <th>Date de candidature</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for candidature in candidatures %}
+                <tr>
+                    <td>{{ candidature.candidat.username }}</td>
+                    <td>{{ candidature.offre.titre }}</td>
+                    <td>{{ candidature.offre.entreprise }}</td>
+                    <td>{{ candidature.date_candidature|date:"d/m/Y" }}</td>
+                    <td>{{ candidature.statut|default:"En attente" }}</td>
+                    <td>
+                        <button class="btn-accept" onclick="changerStatut({{ candidature.id }}, 'acceptee', this)">Accepter</button>
+                        <button class="btn-reject" onclick="changerStatut({{ candidature.id }}, 'refusee', this)">Refuser</button>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6">Aucune candidature reçue.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Boutons généraux -->
         <div class="buttons">
             <button onclick="window.location.href='{% url 'logout' %}'">Déconnexion</button>
+            <button onclick="window.location.href='{% url 'ajouter_offre' %}'">Ajouter une Offre de Stage</button>
+            <button onclick="window.location.href='{% url 'liste_offres' %}'">Voir les Offres</button>
         </div>
     </div>
+
+    <!-- AJAX pour changer le statut -->
+    <script>
+    function changerStatut(candidatureId, statut, button) {
+        fetch("{% url 'changer_statut_ajax' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: `candidature_id=${candidatureId}&statut=${statut}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Mettre à jour le statut directement dans le tableau
+                button.closest('tr').querySelector('td:nth-child(5)').innerText =
+                    statut === 'acceptee' ? 'acceptée' : 'refusée';
+            } else {
+                alert("Erreur lors du changement de statut.");
+            }
+        })
+        .catch(() => alert("Erreur réseau lors du changement de statut."));
+    }
+    </script>
 </body>
 </html>

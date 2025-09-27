@@ -247,6 +247,38 @@ def liste_offres_stage(request):
 
     offres = OffreStage.objects.all().order_by('-date_publication')
     return render(request, 'condidatures/liste_offres.html', {'offres': offres})
+#--------------------------------------------------------------------------------------------------------
+# ✅ Mise à jour d’une offre
+def update_offre_stage(request, id):
+    if not request.user.is_authenticated or not request.user.is_superuser:
+        return redirect('admin_login')
+
+    offre = get_object_or_404(OffreStage, id=id)
+    if request.method == 'POST':
+        form = OffreStageForm(request.POST, instance=offre)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Offre mise à jour avec succès.")
+            return redirect('liste_offres')
+        else:
+            messages.error(request, "Veuillez corriger les erreurs.")
+    else:
+        form = OffreStageForm(instance=offre)  # pré-rempli avec anciennes données
+
+    return render(request, 'condidatures/update_offre.html', {'form': form})
+
+# ✅ Suppression d’une offre
+def delete_offre_stage(request, id):
+    if not request.user.is_authenticated or not request.user.is_superuser:
+        return redirect('admin_login')
+
+    offre = get_object_or_404(OffreStage, id=id)
+    if request.method == 'POST':
+        offre.delete()
+        messages.success(request, "Offre supprimée avec succès.")
+        return redirect('liste_offres')
+
+    return render(request, 'condidatures/delete_offre.html', {'offre': offre})
 
 
 #------------------------------------------------------------------------------------------------------

@@ -120,7 +120,7 @@
             if (data.success) {
                 // Mettre à jour le statut directement dans le tableau
                 button.closest('tr').querySelector('td:nth-child(5)').innerText =
-                    statut === 'acceptee' ? 'acceptée' : 'refusée';
+                    statut === 'acceptee' ? 'acceptee' : 'refusee';
             } else {
                 alert("Erreur lors du changement de statut.");
             }

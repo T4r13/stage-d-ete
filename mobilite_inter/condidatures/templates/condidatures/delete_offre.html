@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suppression d'une Offre de Stage</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; }
+        .container { background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); max-width: 600px; margin: 0 auto; text-align: center; }
+        h1 { color: #dc3545; }
+        p { font-size: 18px; margin: 20px 0; }
+        button { padding: 10px 20px; margin: 5px; border: none; border-radius: 4px; cursor: pointer; }
+        .btn-delete { background-color: #dc3545; color: white; }
+        .btn-delete:hover { background-color: #c82333; }
+        .btn-cancel { background-color: #6c757d; color: white; }
+        .btn-cancel:hover { background-color: #5a6268; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Confirmation de suppression</h1>
+        <p>Voulez-vous vraiment supprimer l'offre <strong>{{ offre.titre }}</strong> de l'entreprise <strong>{{ offre.entreprise }}</strong> ?</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn-delete">Oui, supprimer</button>
+            <a href="{% url 'liste_offres' %}" class="btn-cancel">Annuler</a>
+        </form>
+    </div>
+</body>
+</html>

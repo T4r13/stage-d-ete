@@ -13,6 +13,8 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('ajouter-offre/', views.ajouter_offre_stage, name='ajouter_offre'),
     path('liste-offres/', views.liste_offres_stage, name='liste_offres'),
+    path('offres/update/<int:id>/', views.update_offre_stage, name='update_offre'),
+    path('offres/delete/<int:id>/', views.delete_offre_stage, name='delete_offre'),
     path('postuler/<int:offre_id>/', views.postuler_offre, name='postuler_offre'),
 
 ]

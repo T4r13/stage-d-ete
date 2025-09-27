@@ -29,6 +29,7 @@
                     <th>Date Début</th>
                     <th>Date Fin</th>
                     <th>Date Publication</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -40,6 +41,10 @@
                     <td>{{ offre.date_debut|date:"d/m/Y" }}</td>
                     <td>{{ offre.date_fin|date:"d/m/Y" }}</td>
                     <td>{{ offre.date_publication|date:"d/m/Y" }}</td>
+                    <td>
+                        <button class="btn-edit" onclick="window.location.href='{% url 'update_offre' offre.id %}'">Mise à jour</button>
+                        <button class="btn-delete" onclick="window.location.href='{% url 'delete_offre' offre.id %}'">Supprimer</button>
+                    </td>
                 </tr>
                 {% empty %}
                 <tr>

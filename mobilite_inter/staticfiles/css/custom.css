@@ -336,16 +336,37 @@
 }
 
 .card-header {
-    background: var(--primary-color);
-    color: var(--white);
-    border-bottom: 2px solid var(--black);
+    background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
+    color: #ffffff !important;
+    border-bottom: 2px solid #000000 !important;
+}
+
+.card-header h1,
+.card-header h2,
+.card-header h3,
+.card-header h4,
+.card-header h5,
+.card-header h6 {
+    color: #ffffff !important;
+}
+
+.card-header i {
+    color: #ffffff !important;
+}
+
+.card-header * {
+    color: #ffffff !important;
 }
 
 /* Table styling */
 .table th {
-    background: var(--primary-color);
-    color: var(--white);
-    border-bottom: 2px solid var(--black);
+    background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
+    color: #ffffff !important;
+    border-bottom: 2px solid #000000 !important;
+}
+
+.table th * {
+    color: #ffffff !important;
 }
 
 .table tbody tr:hover {

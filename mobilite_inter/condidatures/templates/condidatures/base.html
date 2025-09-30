@@ -208,8 +208,22 @@
 
         .card-header {
             padding: 1.5rem;
-            border-bottom: 1px solid var(--gray-200);
-            background-color: var(--gray-50);
+            border-bottom: 2px solid var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: var(--white);
+        }
+
+        .card-header h1,
+        .card-header h2,
+        .card-header h3,
+        .card-header h4,
+        .card-header h5,
+        .card-header h6 {
+            color: var(--white) !important;
+        }
+
+        .card-header i {
+            color: var(--white) !important;
         }
 
         .card-body {
@@ -232,14 +246,19 @@
         }
 
         .table th {
-            background-color: var(--primary-color);
-            color: var(--white);
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: var(--white) !important;
             padding: 1rem;
             text-align: left;
             font-weight: 600;
             font-size: 0.875rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
+            border-bottom: 2px solid var(--black);
+        }
+
+        .table th * {
+            color: var(--white) !important;
         }
 
         .table td {

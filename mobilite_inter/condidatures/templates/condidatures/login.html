@@ -1,11 +1,75 @@
 {% extends 'condidatures/base.html' %}
+{% load static %}
 
 {% block title %}Connexion - Mobilité Internationale{% endblock %}
+
+{% block extra_css %}
+<style>
+    .slideshow-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: var(--border-radius-lg);
+        border: none;
+        height: 100%;
+        min-height: 360px;
+        box-shadow: var(--shadow-md);
+        background: var(--gray-100);
+        margin-bottom: 2rem;
+    }
+    .slideshow-track {
+        position: absolute;
+        inset: 0;
+    }
+    .slide {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        transform: translateX(12px) scale(1.02);
+        transition: opacity .35s ease, transform .45s cubic-bezier(.22,.61,.36,1);
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+    .slide.active { opacity: 1; transform: translateX(0) scale(1); }
+    .slideshow-overlay {
+        position: absolute;
+        left: 0; right: 0; bottom: 0;
+        padding: 1rem 1.25rem;
+        background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.35) 65%, rgba(0,0,0,.6) 100%);
+        color: var(--white) !important;
+    }
+    .slideshow-overlay h3,
+    .slideshow-overlay p {
+        color: var(--white) !important;
+    }
+    .slideshow-dots {
+        position: absolute;
+        left: 0; right: 0; bottom: 10px;
+        display: flex; justify-content: center; gap: .4rem;
+    }
+    .dot {
+        width: 8px; height: 8px; border-radius: 9999px;
+        background: rgba(255,255,255,.5);
+        border: 1px solid rgba(255,255,255,.85);
+        transition: transform .2s ease, background .2s ease;
+    }
+    .dot.active { background: var(--white); transform: scale(1.15); }
+    @media (max-width: 480px) { .slideshow-card { min-height: 220px; } }
+</style>
+{% endblock %}
 
 {% block content %}
 <div style="min-height: 80vh; display: flex; align-items: center; justify-content: center; padding: 2rem 0;">
     <div class="container">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div class="text-center mb-8">
+            <h1 style="color: var(--primary-color); font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem;">
+                Bienvenue sur la plateforme Mobilité Internationale
+            </h1>
+            <p style="color: var(--gray-600); font-size: 1.125rem; margin: 0;">
+                Connectez-vous pour continuer
+            </p>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto" style="align-items: stretch;">
             <!-- Candidat Login -->
             <div class="card red-border">
                 <div class="card-header text-center">
@@ -42,6 +106,23 @@
                             Se connecter
                         </button>
                     </form>
+                </div>
+            </div>
+
+            <!-- Slideshow au centre -->
+            <div>
+                <div class="slideshow-card" style="margin-bottom: 0;">
+                    <div class="slideshow-track" id="slideshowTrack">
+                        <div class="slide" style="background-image: url('{% static 'images/login1.png' %}');"></div>
+                        <div class="slide" style="background-image: url('{% static 'images/login2.png' %}');"></div>
+                        <div class="slide" style="background-image: url('{% static 'images/login3.png' %}');"></div>
+                        <div class="slide" style="background-image: url('{% static 'images/login4.png' %}');"></div>
+                    </div>
+                    <div class="slideshow-overlay">
+                        <h3 style="margin: 0; color: var(--white);">Découvrez nos opportunités</h3>
+                        <p style="margin: .25rem 0 0 0; color: var(--white); opacity: .9;">Stages internationaux à votre portée</p>
+                    </div>
+                    <div class="slideshow-dots" id="slideshowDots" aria-hidden="true"></div>
                 </div>
             </div>
 
@@ -86,4 +167,50 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    (function(){
+        const slides = Array.from(document.querySelectorAll('#slideshowTrack .slide'));
+        const dotsContainer = document.getElementById('slideshowDots');
+        if (!slides.length || !dotsContainer) return;
+
+        let current = 0;
+        const dots = slides.map((_, idx) => {
+            const d = document.createElement('span');
+            d.className = 'dot' + (idx === 0 ? ' active' : '');
+            d.addEventListener('click', function(){ goTo(idx, true); });
+            dotsContainer.appendChild(d);
+            return d;
+        });
+
+        function render(){
+            slides.forEach((s, i) => s.classList.toggle('active', i === current));
+            dots.forEach((d, i) => d.classList.toggle('active', i === current));
+        }
+
+        function goTo(index, pause){
+            current = (index + slides.length) % slides.length;
+            render();
+            if (pause) resetTimer();
+        }
+
+        let timer = null;
+        function startTimer(){ timer = setInterval(() => goTo(current + 1, false), 1200); }
+        function stopTimer(){ if (timer) { clearInterval(timer); timer = null; } }
+        function resetTimer(){ stopTimer(); startTimer(); }
+
+        // Init
+        slides[0].classList.add('active');
+        startTimer();
+
+        // Pause on hover for desktop
+        const card = document.querySelector('.slideshow-card');
+        if (card) {
+            card.addEventListener('mouseenter', stopTimer);
+            card.addEventListener('mouseleave', startTimer);
+        }
+    })();
+</script>
 {% endblock %}

@@ -48,11 +48,9 @@
             background-color: var(--light-bg);
             color: var(--black);
             line-height: 1.6;
-        }
-
-        /* Force all text to be black by default */
-        * {
-            color: var(--black) !important;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         /* Override for red and black backgrounds only */
@@ -350,6 +348,129 @@
 
         .hidden { display: none; }
 
+        /* Footer Styles */
+        .footer {
+            background-color: #000000 !important;
+            color: #ffffff !important;
+            padding: 2rem 0;
+            margin-top: auto;
+            border-top: 3px solid #dc2626;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .footer-left {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #dc2626 !important;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-description {
+            color: #ffffff !important;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            margin-top: 0.5rem;
+        }
+
+        .footer-right {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            align-items: flex-end;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: #ffffff !important;
+            text-decoration: none;
+            transition: color 0.2s;
+            font-size: 0.875rem;
+        }
+
+        .footer-link:hover {
+            color: #dc2626 !important;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: #dc2626 !important;
+            color: #ffffff !important;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 1rem;
+        }
+
+        .social-link:hover {
+            background-color: #ffffff !important;
+            color: #dc2626 !important;
+            transform: translateY(-2px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--gray-700);
+        }
+
+        .footer-copyright {
+            margin: 0;
+            color: #9ca3af !important;
+            font-size: 0.875rem;
+        }
+
+        /* FORCE ALL FOOTER TEXT TO WHITE - ULTIMATE OVERRIDE */
+        .footer,
+        .footer *,
+        .footer p,
+        .footer span,
+        .footer div,
+        .footer a,
+        .footer strong,
+        .footer em,
+        .footer i,
+        .footer h1, .footer h2, .footer h3, .footer h4, .footer h5, .footer h6 {
+            color: #ffffff !important;
+        }
+
+        .footer .footer-logo {
+            color: #dc2626 !important;
+        }
+
+        .footer .footer-copyright {
+            color: #9ca3af !important;
+        }
+
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
@@ -374,6 +495,25 @@
             .table th,
             .table td {
                 padding: 0.75rem 0.5rem;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+                align-items: center;
+            }
+
+            .footer-right {
+                align-items: center;
+            }
+
+            .footer-links {
+                justify-content: center;
+                gap: 1.5rem;
+            }
+
+            .footer-social {
+                justify-content: center;
             }
         }
 
@@ -401,7 +541,7 @@
                 <div style="display: flex; align-items: center; gap: 1rem;">
                     <!-- Esprit Logo Image without background -->
                     <img src="{% static 'images/esprit-logo.png.jpg' %}" alt="Esprit Logo" style="height: 40px; width: auto; max-width: 120px;">
-                    <a href="{% url 'admin_dashboard' %}" class="logo">
+                    <a href="{% url 'profile_details' %}" class="logo">
                         <i class="fas fa-graduation-cap"></i>
                         Mobilité Internationale
                     </a>
@@ -456,9 +596,47 @@
         {% block content %}{% endblock %}
     </main>
 
-    <footer style="background-color: var(--black); color: var(--white); padding: 2rem 0; margin-top: 4rem; border-top: 3px solid var(--primary-color);">
-        <div class="container text-center">
-            <p style="margin: 0; color: var(--white);">&copy; 2024 Mobilité Internationale. Tous droits réservés.</p>
+    <footer class="footer" style="background-color: #000000 !important; color: #ffffff !important;">
+        <div class="container" style="color: #ffffff !important;">
+            <div class="footer-content" style="color: #ffffff !important;">
+                <div class="footer-left" style="color: #ffffff !important;">
+                    <div class="footer-logo" style="color: #dc2626 !important;">
+                        <i class="fas fa-graduation-cap" style="color: #dc2626 !important;"></i>
+                        <span style="color: #dc2626 !important;">Mobilité Internationale</span>
+                    </div>
+                    <p class="footer-description" style="color: #ffffff !important;">
+                        Plateforme de gestion des candidatures pour la mobilité internationale. 
+                        Connectez les étudiants aux meilleures opportunités de stage à l'étranger.
+                    </p>
+                </div>
+                <div class="footer-right" style="color: #ffffff !important;">
+                    <div class="footer-links" style="color: #ffffff !important;">
+                        <a href="#" class="footer-link" style="color: #ffffff !important;">À propos</a>
+                        <a href="#" class="footer-link" style="color: #ffffff !important;">Contact</a>
+                        <a href="#" class="footer-link" style="color: #ffffff !important;">Mentions légales</a>
+                        <a href="#" class="footer-link" style="color: #ffffff !important;">Politique de confidentialité</a>
+                    </div>
+                    <div class="footer-social" style="color: #ffffff !important;">
+                        <a href="#" class="social-link" title="Facebook" style="background-color: #dc2626 !important; color: #ffffff !important;">
+                            <i class="fab fa-facebook-f" style="color: #ffffff !important;"></i>
+                        </a>
+                        <a href="#" class="social-link" title="Twitter" style="background-color: #dc2626 !important; color: #ffffff !important;">
+                            <i class="fab fa-twitter" style="color: #ffffff !important;"></i>
+                        </a>
+                        <a href="#" class="social-link" title="LinkedIn" style="background-color: #dc2626 !important; color: #ffffff !important;">
+                            <i class="fab fa-linkedin-in" style="color: #ffffff !important;"></i>
+                        </a>
+                        <a href="#" class="social-link" title="Instagram" style="background-color: #dc2626 !important; color: #ffffff !important;">
+                            <i class="fab fa-instagram" style="color: #ffffff !important;"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom" style="color: #ffffff !important;">
+                <p class="footer-copyright" style="color: #9ca3af !important;">
+                    &copy; 2024 Mobilité Internationale. Tous droits réservés.
+                </p>
+            </div>
         </div>
     </footer>
 

@@ -383,11 +383,36 @@
     color: var(--primary-dark);
 }
 
-/* Footer styling */
+/* Footer styling: allow page templates to control footer theme */
 footer {
-    background: var(--black) !important;
-    color: var(--white) !important;
     border-top: 3px solid var(--primary-color);
+}
+
+/* Ensure footer text is white on black background - STRONGEST OVERRIDE */
+footer {
+    color: var(--white) !important;
+}
+
+footer * {
+    color: var(--white) !important;
+}
+
+footer h1, footer h2, footer h3, footer h4, footer h5, footer h6,
+footer p, footer span, footer div, footer strong, footer em,
+footer a, footer li, footer td, footer th {
+    color: var(--white) !important;
+}
+
+footer[style*="background-color: var(--black)"],
+footer[style*="background-color: #000000"],
+footer[style*="background-color: black"] {
+    color: var(--white) !important;
+}
+
+footer[style*="background-color: var(--black)"] *,
+footer[style*="background-color: #000000"] *,
+footer[style*="background-color: black"] * {
+    color: var(--white) !important;
 }
 
 /* Status indicators */
@@ -625,59 +650,59 @@ body {
     color: inherit;
 }
 
-/* Force black text on all white backgrounds - STRONGEST OVERRIDE */
-* {
+/* Force black text on all white backgrounds - STRONGEST OVERRIDE - DISABLED */
+/* * {
     color: var(--black);
-}
+} */
 
-/* Override for any element with white background */
-[style*="background: white"],
-[style*="background: var(--white)"],
-[style*="background: #ffffff"],
-[style*="background-color: white"],
-[style*="background-color: var(--white)"],
-[style*="background-color: #ffffff"] {
+/* Override for any element with white background - EXCEPT FOOTER */
+[style*="background: white"]:not(footer),
+[style*="background: var(--white)"]:not(footer),
+[style*="background: #ffffff"]:not(footer),
+[style*="background-color: white"]:not(footer),
+[style*="background-color: var(--white)"]:not(footer),
+[style*="background-color: #ffffff"]:not(footer) {
     color: var(--black) !important;
 }
 
-[style*="background: white"] *,
-[style*="background: var(--white)"] *,
-[style*="background: #ffffff"] *,
-[style*="background-color: white"] *,
-[style*="background-color: var(--white)"] *,
-[style*="background-color: #ffffff"] * {
+[style*="background: white"]:not(footer) *,
+[style*="background: var(--white)"]:not(footer) *,
+[style*="background: #ffffff"]:not(footer) *,
+[style*="background-color: white"]:not(footer) *,
+[style*="background-color: var(--white)"]:not(footer) *,
+[style*="background-color: #ffffff"]:not(footer) * {
     color: var(--black) !important;
 }
 
-/* Override for any element with light background */
-[style*="background: #f8fafc"],
-[style*="background: #f9fafb"],
-[style*="background: #f3f4f6"],
-[style*="background: #e5e7eb"] {
+/* Override for any element with light background - EXCEPT FOOTER */
+[style*="background: #f8fafc"]:not(footer),
+[style*="background: #f9fafb"]:not(footer),
+[style*="background: #f3f4f6"]:not(footer),
+[style*="background: #e5e7eb"]:not(footer) {
     color: var(--black) !important;
 }
 
-[style*="background: #f8fafc"] *,
-[style*="background: #f9fafb"] *,
-[style*="background: #f3f4f6"] *,
-[style*="background: #e5e7eb"] * {
+[style*="background: #f8fafc"]:not(footer) *,
+[style*="background: #f9fafb"]:not(footer) *,
+[style*="background: #f3f4f6"]:not(footer) *,
+[style*="background: #e5e7eb"]:not(footer) * {
     color: var(--black) !important;
 }
 
-/* Force black text on all card bodies by default */
-.card-body,
-.card-body *,
-.card-body h1,
-.card-body h2,
-.card-body h3,
-.card-body h4,
-.card-body h5,
-.card-body h6,
-.card-body p,
-.card-body span,
-.card-body div,
-.card-body strong,
-.card-body em {
+/* Force black text on all card bodies by default - EXCEPT FOOTER */
+.card-body:not(footer .card-body),
+.card-body:not(footer .card-body) *,
+.card-body:not(footer .card-body) h1,
+.card-body:not(footer .card-body) h2,
+.card-body:not(footer .card-body) h3,
+.card-body:not(footer .card-body) h4,
+.card-body:not(footer .card-body) h5,
+.card-body:not(footer .card-body) h6,
+.card-body:not(footer .card-body) p,
+.card-body:not(footer .card-body) span,
+.card-body:not(footer .card-body) div,
+.card-body:not(footer .card-body) strong,
+.card-body:not(footer .card-body) em {
     color: var(--black) !important;
 }
 
@@ -699,16 +724,17 @@ body {
 }
 
 /* Override any inline styles that might be setting white text */
-[style*="color: white"],
+/* Disabled rule that was forcing white text to black */
+/* [style*="color: white"],
 [style*="color: #ffffff"],
 [style*="color: var(--white)"] {
     color: var(--black) !important;
-}
+} */
 
-/* Force all text elements to be black unless explicitly overridden */
-h1, h2, h3, h4, h5, h6, p, span, div, strong, em, a, li, td, th {
+/* Force all text elements to be black unless explicitly overridden - DISABLED */
+/* h1, h2, h3, h4, h5, h6, p, span, div, strong, em, a, li, td, th {
     color: var(--black) !important;
-}
+} */
 
 /* Red placeholder text for search field */
 #searchOffers::placeholder {
@@ -745,4 +771,179 @@ h1, h2, h3, h4, h5, h6, p, span, div, strong, em, a, li, td, th {
 [style*="background: var(--black)"] h4, [style*="background: var(--black)"] h5, [style*="background: var(--black)"] h6,
 [style*="background: var(--black)"] p, [style*="background: var(--black)"] span, [style*="background: var(--black)"] div {
     color: var(--white) !important;
+}
+
+/* FOOTER TEXT VISIBILITY FIX - HIGHEST SPECIFICITY */
+footer {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+}
+
+footer * {
+    color: #ffffff !important;
+}
+
+footer h1, footer h2, footer h3, footer h4, footer h5, footer h6,
+footer p, footer span, footer div, footer strong, footer em,
+footer a, footer li, footer td, footer th, footer i {
+    color: #ffffff !important;
+}
+
+/* Specific footer text elements */
+footer .footer-description {
+    color: #ffffff !important;
+}
+
+footer .footer-content {
+    color: #ffffff !important;
+}
+
+footer .footer-content * {
+    color: #ffffff !important;
+}
+
+footer .footer-left {
+    color: #ffffff !important;
+}
+
+footer .footer-left * {
+    color: #ffffff !important;
+}
+
+footer .footer-right {
+    color: #ffffff !important;
+}
+
+footer .footer-right * {
+    color: #ffffff !important;
+}
+
+footer .footer-logo {
+    color: #dc2626 !important;
+}
+
+footer .footer-link {
+    color: #ffffff !important;
+}
+
+footer .footer-link:hover {
+    color: #dc2626 !important;
+}
+
+footer .footer-copyright {
+    color: #9ca3af !important;
+}
+
+footer .social-link {
+    color: #ffffff !important;
+    background-color: #dc2626 !important;
+}
+
+footer .social-link:hover {
+    color: #dc2626 !important;
+    background-color: #ffffff !important;
+}
+
+/* Override any inline styles that might be setting text color */
+footer[style*="color"] {
+    color: #ffffff !important;
+}
+
+footer[style*="color"] * {
+    color: #ffffff !important;
+}
+
+/* Additional specific overrides for all possible footer text */
+.footer p,
+.footer span,
+.footer div,
+.footer a,
+.footer strong,
+.footer em {
+    color: #ffffff !important;
+}
+
+/* Force white text on all footer elements regardless of any other rules */
+footer,
+footer *,
+footer p,
+footer span,
+footer div,
+footer a,
+footer strong,
+footer em,
+footer h1, footer h2, footer h3, footer h4, footer h5, footer h6 {
+    color: #ffffff !important;
+}
+
+/* ULTIMATE FOOTER TEXT WHITE OVERRIDE - MAXIMUM SPECIFICITY */
+.footer,
+.footer *,
+.footer p,
+.footer span,
+.footer div,
+.footer a,
+.footer strong,
+.footer em,
+.footer h1, .footer h2, .footer h3, .footer h4, .footer h5, .footer h6,
+.footer .footer-description,
+.footer .footer-content,
+.footer .footer-left,
+.footer .footer-right,
+.footer .footer-links,
+.footer .footer-link,
+.footer .footer-copyright {
+    color: #ffffff !important;
+}
+
+/* Override any possible conflicting rules */
+body .footer,
+body .footer *,
+body .footer p,
+body .footer span,
+body .footer div,
+body .footer a {
+    color: #ffffff !important;
+}
+
+/* FINAL OVERRIDE - FORCE ALL FOOTER TEXT TO WHITE */
+.footer,
+.footer *,
+.footer p,
+.footer span,
+.footer div,
+.footer a,
+.footer strong,
+.footer em,
+.footer i,
+.footer h1, .footer h2, .footer h3, .footer h4, .footer h5, .footer h6,
+.footer .footer-description,
+.footer .footer-content,
+.footer .footer-left,
+.footer .footer-right,
+.footer .footer-links,
+.footer .footer-link,
+.footer .footer-copyright,
+.footer .footer-bottom,
+.footer .container,
+.footer .container * {
+    color: #ffffff !important;
+}
+
+/* Specific overrides for the exact text mentioned */
+.footer .footer-description,
+.footer .footer-link,
+.footer .footer-copyright {
+    color: #ffffff !important;
+}
+
+/* Override any CSS variables that might be interfering */
+.footer {
+    --text-primary: #ffffff !important;
+    --text-secondary: #ffffff !important;
+    color: #ffffff !important;
+}
+
+.footer * {
+    color: #ffffff !important;
 }

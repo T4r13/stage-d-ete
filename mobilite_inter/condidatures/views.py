@@ -208,7 +208,7 @@ def changer_statut_ajax(request):
             if email:
                 sujet = "Résultat de votre candidature"
                 if nouveau_statut == "acceptee":
-                    message = f"Bonjour {candidature.candidat.username},\n\nFélicitations ! Votre candidature pour l'offre '{candidature.offre.titre}' a été ACCEPTÉE."
+                    message = f"Bonjour {candidature.candidat.username},\n\nFélicitations ! Votre candidature pour l'offre '{candidature.offre.titre}' a été ACCEPTÉE. \n\n Veuillez contactez notre service"
                 else:
                     message = f"Bonjour {candidature.candidat.username},\n\nNous vous remercions, votre candidature pour l'offre '{candidature.offre.titre}' a été REFUSÉE."
 

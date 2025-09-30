@@ -1,0 +1,748 @@
+/* Custom styles for Mobilité Internationale - Red, Black & White Theme */
+
+/* Red, Black & White Color Overrides */
+:root {
+    --primary-color: #dc2626;
+    --primary-dark: #b91c1c;
+    --primary-light: #fca5a5;
+    --secondary-color: #6b7280;
+    --success-color: #dc2626;
+    --warning-color: #dc2626;
+    --danger-color: #dc2626;
+    --light-bg: #ffffff;
+    --white: #ffffff;
+    --black: #000000;
+    --dark-bg: #1a1a1a;
+    --card-bg: #ffffff;
+    --text-primary: #000000;
+    --text-secondary: #6b7280;
+    --border-color: #e5e7eb;
+    --hover-bg: #fef2f2;
+}
+
+/* Dark theme support for red/black/white */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --light-bg: #000000;
+        --card-bg: #1a1a1a;
+        --text-primary: #ffffff;
+        --text-secondary: #9ca3af;
+        --border-color: #374151;
+        --hover-bg: #2d1b1b;
+    }
+}
+
+/* Red accent gradients */
+.red-gradient {
+    background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
+    color: var(--white) !important;
+}
+
+.card-header.red-gradient {
+    background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
+    color: var(--white) !important;
+}
+
+.red-gradient-light {
+    background: linear-gradient(135deg, #fca5a5, #dc2626);
+}
+
+/* Black and white contrast */
+.high-contrast {
+    background: #000000;
+    color: #ffffff;
+}
+
+.high-contrast-inverse {
+    background: #ffffff;
+    color: #000000;
+    border: 2px solid #000000;
+}
+
+/* Additional animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Card animations */
+.card {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Button hover effects */
+.btn {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+/* Table row hover effects */
+.table tbody tr {
+    transition: all 0.2s ease;
+}
+
+.table tbody tr:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Loading spinner */
+.spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--gray-100);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-dark);
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+    .card {
+        margin: 0.5rem;
+    }
+    
+    .btn {
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
+    }
+    
+    .table {
+        font-size: 0.8rem;
+    }
+    
+    .grid {
+        gap: 1rem;
+    }
+}
+
+/* Print styles */
+@media print {
+    .header,
+    .btn,
+    .nav {
+        display: none !important;
+    }
+    
+    .card {
+        box-shadow: none;
+        border: 1px solid #ccc;
+    }
+    
+    .table {
+        border-collapse: collapse;
+    }
+    
+    .table th,
+    .table td {
+        border: 1px solid #ccc;
+    }
+}
+
+/* Dark mode support (future enhancement) */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --light-bg: #1a1a1a;
+        --white: #2d2d2d;
+        --gray-50: #2d2d2d;
+        --gray-100: #3a3a3a;
+        --gray-200: #4a4a4a;
+        --gray-300: #5a5a5a;
+        --gray-400: #6a6a6a;
+        --gray-500: #7a7a7a;
+        --gray-600: #8a8a8a;
+        --gray-700: #9a9a9a;
+        --gray-800: #e0e0e0;
+        --gray-900: #f0f0f0;
+    }
+}
+
+/* Accessibility improvements */
+.btn:focus,
+.form-input:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .btn {
+        border: 2px solid currentColor;
+    }
+    
+    .card {
+        border: 2px solid var(--gray-300);
+    }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Red, Black & White Theme Specific Styles */
+
+/* Header styling */
+.header {
+    background: var(--white);
+    border-bottom: 3px solid var(--primary-color);
+    box-shadow: 0 2px 4px rgba(220, 38, 38, 0.1);
+}
+
+.logo {
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+.logo i {
+    color: var(--black);
+}
+
+/* Navigation styling */
+.nav-link {
+    color: var(--text-primary);
+    border: 1px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    background: var(--hover-bg);
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.nav-link.active {
+    background: var(--primary-color);
+    color: var(--white);
+    border-color: var(--black);
+}
+
+/* Button styling */
+.btn-primary {
+    background: var(--primary-color);
+    color: var(--white);
+    border: 2px solid var(--black);
+    font-weight: 600;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(220, 38, 38, 0.3);
+}
+
+.btn-success {
+    background: var(--primary-color);
+    color: var(--white);
+    border: 2px solid var(--black);
+}
+
+.btn-warning {
+    background: var(--primary-color);
+    color: var(--white);
+    border: 2px solid var(--black);
+}
+
+.btn-danger {
+    background: var(--black);
+    color: var(--white);
+    border: 2px solid var(--primary-color);
+}
+
+.btn-danger:hover {
+    background: var(--primary-color);
+    color: var(--white);
+}
+
+.btn-outline {
+    background: var(--white);
+    color: var(--black);
+    border: 2px solid var(--black);
+}
+
+.btn-outline:hover {
+    background: var(--black);
+    color: var(--white);
+}
+
+/* Card styling */
+.card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    background: var(--primary-color);
+    color: var(--white);
+    border-bottom: 2px solid var(--black);
+}
+
+/* Table styling */
+.table th {
+    background: var(--primary-color);
+    color: var(--white);
+    border-bottom: 2px solid var(--black);
+}
+
+.table tbody tr:hover {
+    background: var(--hover-bg);
+}
+
+/* Form styling */
+.form-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+/* Alert styling */
+.alert-success {
+    background: #fef2f2;
+    border-color: var(--primary-color);
+    color: var(--primary-dark);
+}
+
+.alert-error {
+    background: #fef2f2;
+    border-color: var(--primary-color);
+    color: var(--primary-dark);
+}
+
+.alert-warning {
+    background: #fef2f2;
+    border-color: var(--primary-color);
+    color: var(--primary-dark);
+}
+
+.alert-info {
+    background: #fef2f2;
+    border-color: var(--primary-color);
+    color: var(--primary-dark);
+}
+
+/* Footer styling */
+footer {
+    background: var(--black) !important;
+    color: var(--white) !important;
+    border-top: 3px solid var(--primary-color);
+}
+
+/* Status indicators */
+.status-accepted {
+    background: var(--primary-color);
+    color: var(--white);
+}
+
+.status-pending {
+    background: var(--gray-400);
+    color: var(--white);
+}
+
+.status-rejected {
+    background: var(--black);
+    color: var(--white);
+}
+
+/* Special red accent elements */
+.red-accent {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.red-border {
+    border: 2px solid var(--primary-color);
+}
+
+.red-bg {
+    background: var(--primary-color);
+    color: var(--white);
+}
+
+/* Esprit Logo Styling */
+.esprit-logo {
+    display: inline-block;
+    text-align: center;
+    margin: 1rem 0;
+}
+
+.esprit-logo .logo-text {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 2rem;
+    font-weight: bold;
+    font-family: 'Inter', sans-serif;
+    line-height: 1;
+}
+
+.esprit-logo .logo-text .black-text {
+    color: var(--black);
+    font-weight: 700;
+}
+
+.esprit-logo .logo-text .gray-text {
+    color: var(--gray-400);
+    font-size: 1.2em;
+    font-weight: 300;
+}
+
+.esprit-logo .triangle {
+    width: 0;
+    height: 0;
+    border-left: 12px solid var(--primary-color);
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    margin-left: 0.25rem;
+    display: inline-block;
+}
+
+.esprit-logo .tagline {
+    font-size: 0.9rem;
+    color: var(--black);
+    margin-top: 0.5rem;
+    font-style: italic;
+    font-weight: 300;
+}
+
+/* Logo hover effect */
+.esprit-logo:hover .triangle {
+    border-left-color: var(--primary-dark);
+    transform: translateX(2px);
+    transition: all 0.3s ease;
+}
+
+.esprit-logo:hover .black-text {
+    color: var(--primary-color);
+    transition: color 0.3s ease;
+}
+
+/* High contrast mode for accessibility */
+@media (prefers-contrast: high) {
+    .btn {
+        border: 3px solid var(--black);
+    }
+    
+    .card {
+        border: 3px solid var(--black);
+    }
+    
+    .table th {
+        border: 2px solid var(--black);
+    }
+}
+
+/* Fix white text on white background issues */
+/* Ensure all text has proper contrast */
+body {
+    color: var(--black);
+}
+
+/* White background cards should have black text */
+.card {
+    color: var(--black);
+}
+
+.card-body {
+    color: var(--black);
+}
+
+.card-body h1,
+.card-body h2,
+.card-body h3,
+.card-body h4,
+.card-body h5,
+.card-body h6 {
+    color: var(--black);
+}
+
+.card-body p {
+    color: var(--black);
+}
+
+/* Red background cards should have white text */
+.card[style*="background: var(--primary-color)"],
+.card[style*="background: #dc2626"],
+.red-gradient {
+    color: var(--white);
+}
+
+.card[style*="background: var(--primary-color)"] .card-body,
+.card[style*="background: #dc2626"] .card-body,
+.red-gradient .card-body {
+    color: var(--white);
+}
+
+.card[style*="background: var(--primary-color)"] .card-body h1,
+.card[style*="background: var(--primary-color)"] .card-body h2,
+.card[style*="background: var(--primary-color)"] .card-body h3,
+.card[style*="background: var(--primary-color)"] .card-body h4,
+.card[style*="background: var(--primary-color)"] .card-body h5,
+.card[style*="background: var(--primary-color)"] .card-body h6,
+.card[style*="background: #dc2626"] .card-body h1,
+.card[style*="background: #dc2626"] .card-body h2,
+.card[style*="background: #dc2626"] .card-body h3,
+.card[style*="background: #dc2626"] .card-body h4,
+.card[style*="background: #dc2626"] .card-body h5,
+.card[style*="background: #dc2626"] .card-body h6,
+.red-gradient .card-body h1,
+.red-gradient .card-body h2,
+.red-gradient .card-body h3,
+.red-gradient .card-body h4,
+.red-gradient .card-body h5,
+.red-gradient .card-body h6 {
+    color: var(--white);
+}
+
+.card[style*="background: var(--primary-color)"] .card-body p,
+.card[style*="background: #dc2626"] .card-body p,
+.red-gradient .card-body p {
+    color: var(--white);
+}
+
+/* Black background cards should have white text */
+.card[style*="background: var(--black)"],
+.card[style*="background: #000000"] {
+    color: var(--white);
+}
+
+.card[style*="background: var(--black)"] .card-body,
+.card[style*="background: #000000"] .card-body {
+    color: var(--white);
+}
+
+.card[style*="background: var(--black)"] .card-body h1,
+.card[style*="background: var(--black)"] .card-body h2,
+.card[style*="background: var(--black)"] .card-body h3,
+.card[style*="background: var(--black)"] .card-body h4,
+.card[style*="background: var(--black)"] .card-body h5,
+.card[style*="background: var(--black)"] .card-body h6,
+.card[style*="background: #000000"] .card-body h1,
+.card[style*="background: #000000"] .card-body h2,
+.card[style*="background: #000000"] .card-body h3,
+.card[style*="background: #000000"] .card-body h4,
+.card[style*="background: #000000"] .card-body h5,
+.card[style*="background: #000000"] .card-body h6 {
+    color: var(--white);
+}
+
+.card[style*="background: var(--black)"] .card-body p,
+.card[style*="background: #000000"] .card-body p {
+    color: var(--white);
+}
+
+/* Override any white text on white backgrounds */
+[style*="background: white"] *,
+[style*="background: var(--white)"] *,
+[style*="background: #ffffff"] * {
+    color: var(--black) !important;
+}
+
+/* Ensure red backgrounds have white text */
+[style*="background: var(--primary-color)"] *,
+[style*="background: #dc2626"] *,
+.red-gradient * {
+    color: var(--white) !important;
+}
+
+/* Ensure black backgrounds have white text */
+[style*="background: var(--black)"] *,
+[style*="background: #000000"] * {
+    color: var(--white) !important;
+}
+
+/* Force proper text color inheritance */
+.card-body * {
+    color: inherit;
+}
+
+/* Specific overrides for problematic elements */
+.card-body span,
+.card-body div,
+.card-body strong {
+    color: inherit;
+}
+
+/* Force black text on all white backgrounds - STRONGEST OVERRIDE */
+* {
+    color: var(--black);
+}
+
+/* Override for any element with white background */
+[style*="background: white"],
+[style*="background: var(--white)"],
+[style*="background: #ffffff"],
+[style*="background-color: white"],
+[style*="background-color: var(--white)"],
+[style*="background-color: #ffffff"] {
+    color: var(--black) !important;
+}
+
+[style*="background: white"] *,
+[style*="background: var(--white)"] *,
+[style*="background: #ffffff"] *,
+[style*="background-color: white"] *,
+[style*="background-color: var(--white)"] *,
+[style*="background-color: #ffffff"] * {
+    color: var(--black) !important;
+}
+
+/* Override for any element with light background */
+[style*="background: #f8fafc"],
+[style*="background: #f9fafb"],
+[style*="background: #f3f4f6"],
+[style*="background: #e5e7eb"] {
+    color: var(--black) !important;
+}
+
+[style*="background: #f8fafc"] *,
+[style*="background: #f9fafb"] *,
+[style*="background: #f3f4f6"] *,
+[style*="background: #e5e7eb"] * {
+    color: var(--black) !important;
+}
+
+/* Force black text on all card bodies by default */
+.card-body,
+.card-body *,
+.card-body h1,
+.card-body h2,
+.card-body h3,
+.card-body h4,
+.card-body h5,
+.card-body h6,
+.card-body p,
+.card-body span,
+.card-body div,
+.card-body strong,
+.card-body em {
+    color: var(--black) !important;
+}
+
+/* Only override for red and black backgrounds */
+.card[style*="background: var(--primary-color)"] .card-body,
+.card[style*="background: #dc2626"] .card-body,
+.red-gradient .card-body,
+.card[style*="background: var(--black)"] .card-body,
+.card[style*="background: #000000"] .card-body {
+    color: var(--white) !important;
+}
+
+.card[style*="background: var(--primary-color)"] .card-body *,
+.card[style*="background: #dc2626"] .card-body *,
+.red-gradient .card-body *,
+.card[style*="background: var(--black)"] .card-body *,
+.card[style*="background: #000000"] .card-body * {
+    color: var(--white) !important;
+}
+
+/* Override any inline styles that might be setting white text */
+[style*="color: white"],
+[style*="color: #ffffff"],
+[style*="color: var(--white)"] {
+    color: var(--black) !important;
+}
+
+/* Force all text elements to be black unless explicitly overridden */
+h1, h2, h3, h4, h5, h6, p, span, div, strong, em, a, li, td, th {
+    color: var(--black) !important;
+}
+
+/* Red placeholder text for search field */
+#searchOffers::placeholder {
+    color: var(--primary-color) !important;
+    opacity: 0.8;
+    font-weight: 500;
+}
+
+#searchOffers::-webkit-input-placeholder {
+    color: var(--primary-color) !important;
+    opacity: 0.8;
+    font-weight: 500;
+}
+
+#searchOffers::-moz-placeholder {
+    color: var(--primary-color) !important;
+    opacity: 0.8;
+    font-weight: 500;
+}
+
+#searchOffers:-ms-input-placeholder {
+    color: var(--primary-color) !important;
+    opacity: 0.8;
+    font-weight: 500;
+}
+
+/* Override for specific red/black backgrounds only */
+.red-gradient h1, .red-gradient h2, .red-gradient h3, .red-gradient h4, .red-gradient h5, .red-gradient h6,
+.red-gradient p, .red-gradient span, .red-gradient div, .red-gradient strong, .red-gradient em,
+[style*="background: var(--primary-color)"] h1, [style*="background: var(--primary-color)"] h2, [style*="background: var(--primary-color)"] h3,
+[style*="background: var(--primary-color)"] h4, [style*="background: var(--primary-color)"] h5, [style*="background: var(--primary-color)"] h6,
+[style*="background: var(--primary-color)"] p, [style*="background: var(--primary-color)"] span, [style*="background: var(--primary-color)"] div,
+[style*="background: var(--black)"] h1, [style*="background: var(--black)"] h2, [style*="background: var(--black)"] h3,
+[style*="background: var(--black)"] h4, [style*="background: var(--black)"] h5, [style*="background: var(--black)"] h6,
+[style*="background: var(--black)"] p, [style*="background: var(--black)"] span, [style*="background: var(--black)"] div {
+    color: var(--white) !important;
+}

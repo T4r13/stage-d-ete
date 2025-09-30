@@ -111,12 +111,12 @@
 
     <!-- Candidatures Section -->
     <div class="card mb-8">
-        <div class="card-header">
+        <div class="card-header" style="display: flex; align-items: center; justify-content: space-between;">
             <h2 style="margin: 0; display: flex; align-items: center; gap: 0.5rem;">
                 <i class="fas fa-file-alt" style="color: var(--success-color);"></i>
                 Candidatures
             </h2>
-             <a href="{% url 'export_candidatures_pdf' %}" class="btn btn-outline">
+            <a href="{% url 'export_candidatures_pdf' %}" class="btn btn-outline">
                 <i class="fas fa-file-pdf"></i>
                 Exporter PDF
             </a>
@@ -155,6 +155,9 @@
                             </td>
                             <td>
                                 <div style="display: flex; gap: 0.5rem;">
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.75rem;" onclick="voirDetails({{ candidature.id }})">
+                                        <i class="fas fa-eye"></i> Voir
+                                    </button>
                                     <button class="btn btn-success" style="padding: 0.5rem 1rem; font-size: 0.75rem;" onclick="changerStatut({{ candidature.id }}, 'acceptee', this)">
                                         <i class="fas fa-check"></i> Accepter
                                     </button>
@@ -199,7 +202,283 @@
     </div>
 </div>
 
+<!-- Modal pour afficher les détails de la candidature -->
+<div id="candidatureModal" class="modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
+    <div class="modal-content" style="background-color: var(--white); margin: 2% auto; padding: 0; width: 90%; max-width: 1000px; border-radius: var(--border-radius-lg); box-shadow: var(--shadow-lg); max-height: 90vh; overflow-y: auto;">
+        <div class="modal-header" style="background: var(--primary-color); color: white; padding: 1.5rem; border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0; display: flex; justify-content: space-between; align-items: center;">
+            <h2 style="margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-file-alt"></i>
+                Détails de la Candidature
+            </h2>
+            <span class="close" onclick="fermerModal()" style="font-size: 2rem; font-weight: bold; cursor: pointer; color: white;">&times;</span>
+        </div>
+        <div class="modal-body" style="padding: 2rem;">
+            <div id="modalContent">
+                <!-- Le contenu sera chargé dynamiquement -->
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
+// Données des candidatures pour la modal - Version sécurisée
+const candidaturesData = {
+    {% for candidature in candidatures %}
+    {{ candidature.id }}: {
+        candidat: {
+            username: "{{ candidature.candidat.username|escapejs }}",
+            email: "{{ candidature.candidat.email|escapejs }}",
+            first_name: "{{ candidature.candidat.first_name|escapejs }}",
+            last_name: "{{ candidature.candidat.last_name|escapejs }}",
+            date_joined: "{{ candidature.candidat.date_joined|date:'d/m/Y' }}"
+        },
+        profile: {
+            identifiant: "{{ candidature.candidat.profile.identifiant|escapejs }}",
+            email: "{{ candidature.candidat.profile.email|escapejs }}",
+            moyenne: {{ candidature.candidat.profile.moyenne }},
+            langues: "{{ candidature.candidat.profile.langues|escapejs }}",
+            activites: "{{ candidature.candidat.profile.activites|default:'Aucune activité'|escapejs }}",
+            certificats: "{{ candidature.candidat.profile.certificats|default:'Aucun certificat'|escapejs }}",
+            // Nouveaux champs avec valeurs par défaut
+            participation_projets: {{ candidature.candidat.profile.participation_projets|default:0 }},
+            experience_internationale: {{ candidature.candidat.profile.experience_internationale|default:0 }},
+            niveau_anglais: "{{ candidature.candidat.profile.get_niveau_anglais_display|default:'Non spécifié'|escapejs }}",
+            motivation_score: {{ candidature.candidat.profile.motivation_score|default:0 }},
+            leadership_score: {{ candidature.candidat.profile.leadership_score|default:0 }},
+            innovation_score: {{ candidature.candidat.profile.innovation_score|default:0 }},
+            adaptabilite_score: {{ candidature.candidat.profile.adaptabilite_score|default:0 }},
+            engagement_communautaire: {{ candidature.candidat.profile.engagement_communautaire|default:0 }},
+            stage_anterieur: "{{ candidature.candidat.profile.stage_anterieur|yesno:'Oui,Non'|default:'Non'|escapejs }}",
+            recommandation_prof: {{ candidature.candidat.profile.recommandation_prof|default:0 }},
+            portfolio_qualite: {{ candidature.candidat.profile.portfolio_qualite|default:0 }}
+        },
+        offre: {
+            titre: "{{ candidature.offre.titre|escapejs }}",
+            description: "{{ candidature.offre.description|escapejs }}",
+            entreprise: "{{ candidature.offre.entreprise|escapejs }}",
+            localisation: "{{ candidature.offre.localisation|escapejs }}",
+            date_debut: "{{ candidature.offre.date_debut|date:'d/m/Y' }}",
+            date_fin: "{{ candidature.offre.date_fin|date:'d/m/Y' }}",
+            date_publication: "{{ candidature.offre.date_publication|date:'d/m/Y' }}"
+        },
+        candidature: {
+            date_candidature: "{{ candidature.date_candidature|date:'d/m/Y H:i' }}",
+            statut: "{{ candidature.statut|escapejs }}"
+        }
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+};
+
+function voirDetails(candidatureId) {
+    const data = candidaturesData[candidatureId];
+    if (!data) {
+        console.error('Données de candidature non trouvées pour ID:', candidatureId);
+        return;
+    }
+
+    const modalContent = document.getElementById('modalContent');
+    modalContent.innerHTML = `
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Informations Candidat -->
+            <div class="card">
+                <div class="card-header" style="background: var(--primary-color); color: white;">
+                    <h3 style="margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-user"></i>
+                        Informations Candidat
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                        <div style="width: 60px; height: 60px; background: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; font-weight: bold;">
+                            ${data.candidat.username.charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                            <h4 style="margin: 0; color: var(--black);">${data.candidat.username}</h4>
+                            <p style="margin: 0; color: var(--gray-600);">${data.candidat.first_name} ${data.candidat.last_name}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 gap-4">
+                        <div>
+                            <strong style="color: var(--primary-color);">Identifiant:</strong>
+                            <span style="background: var(--gray-100); padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-family: monospace; margin-left: 0.5rem;">${data.profile.identifiant}</span>
+                        </div>
+                        <div>
+                            <strong style="color: var(--primary-color);">Email:</strong>
+                            <span style="margin-left: 0.5rem;">${data.profile.email || data.candidat.email || 'Non renseigné'}</span>
+                        </div>
+                        <div>
+                            <strong style="color: var(--primary-color);">Moyenne:</strong>
+                            <span style="background: var(--primary-color); color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-weight: bold; margin-left: 0.5rem;">${data.profile.moyenne}</span>
+                        </div>
+                        <div>
+                            <strong style="color: var(--primary-color);">Langues:</strong>
+                            <span style="margin-left: 0.5rem;">${data.profile.langues || 'Non renseigné'}</span>
+                        </div>
+                        <div>
+                            <strong style="color: var(--primary-color);">Activités:</strong>
+                            <p style="margin: 0.5rem 0 0 0; background: var(--gray-100); padding: 0.75rem; border-radius: 0.25rem;">${data.profile.activites}</p>
+                        </div>
+                        ${data.profile.certificats !== 'Aucun certificat' ? `
+                        <div>
+                            <strong style="color: var(--primary-color);">Certificats:</strong>
+                            <p style="margin: 0.5rem 0 0 0; background: var(--gray-100); padding: 0.75rem; border-radius: 0.25rem;">${data.profile.certificats}</p>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Détails de l'Offre -->
+            <div class="card">
+                <div class="card-header" style="background: var(--success-color); color: white;">
+                    <h3 style="margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-briefcase"></i>
+                        Détails de l'Offre
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <h4 style="color: var(--black); margin-bottom: 1rem;">${data.offre.titre}</h4>
+                    
+                    <div class="grid grid-cols-1 gap-4">
+                        <div>
+                            <strong style="color: var(--success-color);">Entreprise:</strong>
+                            <span style="margin-left: 0.5rem;">${data.offre.entreprise}</span>
+                        </div>
+                        <div>
+                            <strong style="color: var(--success-color);">Localisation:</strong>
+                            <span style="margin-left: 0.5rem;">${data.offre.localisation}</span>
+                        </div>
+                        <div>
+                            <strong style="color: var(--success-color);">Période:</strong>
+                            <span style="margin-left: 0.5rem;">Du ${data.offre.date_debut} au ${data.offre.date_fin}</span>
+                        </div>
+                        <div>
+                            <strong style="color: var(--success-color);">Date de publication:</strong>
+                            <span style="margin-left: 0.5rem;">${data.offre.date_publication}</span>
+                        </div>
+                        <div>
+                            <strong style="color: var(--success-color);">Description:</strong>
+                            <p style="margin: 0.5rem 0 0 0; background: var(--gray-100); padding: 0.75rem; border-radius: 0.25rem; line-height: 1.5;">${data.offre.description}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Critères de Sélection -->
+        <div class="card mt-6">
+            <div class="card-header" style="background: var(--warning-color); color: white;">
+                <h3 style="margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-chart-bar"></i>
+                    Critères de Sélection
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div>
+                        <h4 style="color: var(--primary-color); margin-bottom: 1rem;">Projets & Expérience</h4>
+                        <div class="grid grid-cols-1 gap-3">
+                            <div>
+                                <strong>Projets participés:</strong>
+                                <span style="background: var(--gray-100); padding: 0.25rem 0.5rem; border-radius: 0.25rem; margin-left: 0.5rem;">${data.profile.participation_projets}</span>
+                            </div>
+                            <div>
+                                <strong>Expérience internationale:</strong>
+                                <span style="background: var(--gray-100); padding: 0.25rem 0.5rem; border-radius: 0.25rem; margin-left: 0.5rem;">${data.profile.experience_internationale} an(s)</span>
+                            </div>
+                            <div>
+                                <strong>Niveau d'anglais:</strong>
+                                <span style="background: var(--primary-color); color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; margin-left: 0.5rem;">${data.profile.niveau_anglais}</span>
+                            </div>
+                            <div>
+                                <strong>Stage antérieur:</strong>
+                                <span style="background: ${data.profile.stage_anterieur === 'Oui' ? 'var(--success-color)' : 'var(--gray-300)'}; color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; margin-left: 0.5rem;">${data.profile.stage_anterieur}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 style="color: var(--primary-color); margin-bottom: 1rem;">Compétences</h4>
+                        <div class="grid grid-cols-1 gap-3">
+                            <div>
+                                <strong>Motivation:</strong>
+                                <span style="background: var(--gray-100); padding: 0.25rem 0.5rem; border-radius: 0.25rem; margin-left: 0.5rem;">${data.profile.motivation_score}/10</span>
+                            </div>
+                            <div>
+                                <strong>Leadership:</strong>
+                                <span style="background: var(--gray-100); padding: 0.25rem 0.5rem; border-radius: 0.25rem; margin-left: 0.5rem;">${data.profile.leadership_score}/10</span>
+                            </div>
+                            <div>
+                                <strong>Innovation:</strong>
+                                <span style="background: var(--gray-100); padding: 0.25rem 0.5rem; border-radius: 0.25rem; margin-left: 0.5rem;">${data.profile.innovation_score}/10</span>
+                            </div>
+                            <div>
+                                <strong>Adaptabilité:</strong>
+                                <span style="background: var(--gray-100); padding: 0.25rem 0.5rem; border-radius: 0.25rem; margin-left: 0.5rem;">${data.profile.adaptabilite_score}/10</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 style="color: var(--primary-color); margin-bottom: 1rem;">Engagement & Portfolio</h4>
+                        <div class="grid grid-cols-1 gap-3">
+                            <div>
+                                <strong>Engagement communautaire:</strong>
+                                <span style="background: var(--gray-100); padding: 0.25rem 0.5rem; border-radius: 0.25rem; margin-left: 0.5rem;">${data.profile.engagement_communautaire}h</span>
+                            </div>
+                            <div>
+                                <strong>Recommandations prof:</strong>
+                                <span style="background: var(--gray-100); padding: 0.25rem 0.5rem; border-radius: 0.25rem; margin-left: 0.5rem;">${data.profile.recommandation_prof}</span>
+                            </div>
+                            <div>
+                                <strong>Qualité portfolio:</strong>
+                                <span style="background: var(--gray-100); padding: 0.25rem 0.5rem; border-radius: 0.25rem; margin-left: 0.5rem;">${data.profile.portfolio_qualite}/10</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Informations Candidature -->
+        <div class="card mt-6">
+            <div class="card-header" style="background: var(--black); color: white;">
+                <h3 style="margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-file-alt"></i>
+                    Informations Candidature
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <strong style="color: var(--black);">Date de candidature:</strong>
+                        <span style="margin-left: 0.5rem;">${data.candidature.date_candidature}</span>
+                    </div>
+                    <div>
+                        <strong style="color: var(--black);">Statut actuel:</strong>
+                        <span style="background: ${data.candidature.statut === 'acceptee' ? 'var(--success-color)' : data.candidature.statut === 'refusee' ? 'var(--danger-color)' : 'var(--warning-color)'}; color: white; padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; margin-left: 0.5rem;">${data.candidature.statut}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('candidatureModal').style.display = 'block';
+}
+
+function fermerModal() {
+    document.getElementById('candidatureModal').style.display = 'none';
+}
+
+// Fermer la modal en cliquant à l'extérieur
+window.onclick = function(event) {
+    const modal = document.getElementById('candidatureModal');
+    if (event.target === modal) {
+        fermerModal();
+    }
+}
+
 function changerStatut(candidatureId, statut, button) {
     // Désactiver le bouton pendant la requête
     button.disabled = true;

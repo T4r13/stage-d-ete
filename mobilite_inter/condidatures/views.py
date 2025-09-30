@@ -90,19 +90,55 @@ def admin_dashboard(request):
     students_data = []
 
     # Définir l'année scolaire
-    annee_scolaire = 2025  # Ajustez si vous voulez l'année en cours avec timezone.now().year
+    annee_scolaire = 2025
 
     # Calculer les données pour chaque profil
     for profile in profiles:
         # Vérifier et récupérer activites
         activites = profile.activites if profile.activites else "Aucune activité"
 
-        # Calculer le score pour ce profil
+        # Calculer le score pour ce profil avec les nouveaux champs
         langues_list = [lang.strip() for lang in profile.langues.split(',') if lang.strip()]
         num_langues = len(langues_list)
-        score_final = (profile.moyenne * 10) + (num_langues * 5) if profile.moyenne is not None else 0
+        
+        # Score de base (moyenne + langues)
+        score_base = (profile.moyenne * 10) + (num_langues * 5)
+        
+        # Score des nouveaux critères
+        score_projets = profile.participation_projets * 2
+        score_experience = profile.experience_internationale * 8
+        
+        # Score niveau anglais
+        niveau_anglais_scores = {
+            'debutant': 2,
+            'intermediaire': 5,
+            'avance': 8,
+            'bilingue': 10
+        }
+        score_anglais = niveau_anglais_scores.get(profile.niveau_anglais, 0)
+        
+        # Score des compétences
+        score_competences = (profile.motivation_score + profile.leadership_score + 
+                           profile.innovation_score + profile.adaptabilite_score) * 2
+        
+        # Score engagement
+        score_engagement = profile.engagement_communautaire * 0.5
+        
+        # Bonus stage antérieur
+        bonus_stage = 15 if profile.stage_anterieur else 0
+        
+        # Score recommandations
+        score_recommandations = profile.recommandation_prof * 3
+        
+        # Score portfolio
+        score_portfolio = profile.portfolio_qualite * 2
+        
+        # Score final total
+        score_final = (score_base + score_projets + score_experience + score_anglais + 
+                      score_competences + score_engagement + bonus_stage + 
+                      score_recommandations + score_portfolio)
 
-        # Date de calcul : utiliser la date de création du profil sans le temps
+        # Date de calcul
         date_calcul = profile.user.date_joined.date() if hasattr(profile.user, 'date_joined') else timezone.now().date()
 
         # Ajouter les données au tableau
@@ -112,10 +148,22 @@ def admin_dashboard(request):
             'moyenne': profile.moyenne,
             'langues': profile.langues,
             'activites': activites,
-            'score_final': score_final,
+            'score_final': round(score_final, 2),
             'date_calcul': date_calcul,
             'rang': None,  # À calculer après
-            'annee': annee_scolaire
+            'annee': annee_scolaire,
+            # Nouveaux champs pour l'admin
+            'participation_projets': profile.participation_projets,
+            'experience_internationale': profile.experience_internationale,
+            'niveau_anglais': profile.get_niveau_anglais_display(),
+            'motivation_score': profile.motivation_score,
+            'leadership_score': profile.leadership_score,
+            'innovation_score': profile.innovation_score,
+            'adaptabilite_score': profile.adaptabilite_score,
+            'engagement_communautaire': profile.engagement_communautaire,
+            'stage_anterieur': profile.stage_anterieur,
+            'recommandation_prof': profile.recommandation_prof,
+            'portfolio_qualite': profile.portfolio_qualite
         })
 
     # Trier par score_final pour déterminer le rang
@@ -188,9 +236,46 @@ def stats(request):
         profile = request.user.profile
         activites = profile.activites if profile.activites else "Aucune activité"
 
+        # Calcul du score avec les nouveaux champs
         langues_list = [lang.strip() for lang in profile.langues.split(',') if lang.strip()]
         num_langues = len(langues_list)
-        score_final = (profile.moyenne * 10) + (num_langues * 5)
+        
+        # Score de base
+        score_base = (profile.moyenne * 10) + (num_langues * 5)
+        
+        # Score des nouveaux critères
+        score_projets = profile.participation_projets * 2
+        score_experience = profile.experience_internationale * 8
+        
+        # Score niveau anglais
+        niveau_anglais_scores = {
+            'debutant': 2,
+            'intermediaire': 5,
+            'avance': 8,
+            'bilingue': 10
+        }
+        score_anglais = niveau_anglais_scores.get(profile.niveau_anglais, 0)
+        
+        # Score des compétences
+        score_competences = (profile.motivation_score + profile.leadership_score + 
+                           profile.innovation_score + profile.adaptabilite_score) * 2
+        
+        # Score engagement
+        score_engagement = profile.engagement_communautaire * 0.5
+        
+        # Bonus stage antérieur
+        bonus_stage = 15 if profile.stage_anterieur else 0
+        
+        # Score recommandations
+        score_recommandations = profile.recommandation_prof * 3
+        
+        # Score portfolio
+        score_portfolio = profile.portfolio_qualite * 2
+        
+        # Score final total
+        score_final = (score_base + score_projets + score_experience + score_anglais + 
+                      score_competences + score_engagement + bonus_stage + 
+                      score_recommandations + score_portfolio)
 
         # Calcul du rang parmi tous les profils
         all_profiles = Profile.objects.all()
@@ -198,7 +283,23 @@ def stats(request):
         for p in all_profiles:
             langues = [lang.strip() for lang in p.langues.split(',') if lang.strip()]
             num_langues = len(langues)
-            score = (p.moyenne * 10) + (num_langues * 5)
+            
+            # Même calcul de score pour tous
+            score_base = (p.moyenne * 10) + (num_langues * 5)
+            score_projets = p.participation_projets * 2
+            score_experience = p.experience_internationale * 8
+            score_anglais = niveau_anglais_scores.get(p.niveau_anglais, 0)
+            score_competences = (p.motivation_score + p.leadership_score + 
+                               p.innovation_score + p.adaptabilite_score) * 2
+            score_engagement = p.engagement_communautaire * 0.5
+            bonus_stage = 15 if p.stage_anterieur else 0
+            score_recommandations = p.recommandation_prof * 3
+            score_portfolio = p.portfolio_qualite * 2
+            
+            score = (score_base + score_projets + score_experience + score_anglais + 
+                    score_competences + score_engagement + bonus_stage + 
+                    score_recommandations + score_portfolio)
+            
             all_students_data.append({
                 'username': p.user.username,
                 'score_final': score
@@ -207,7 +308,7 @@ def stats(request):
         all_students_data.sort(key=lambda x: x['score_final'], reverse=True)
         rang = next((i + 1 for i, student in enumerate(all_students_data) if student['username'] == profile.user.username), None)
 
-        date_calcul = profile.date_joined.date() if hasattr(profile, 'date_joined') else timezone.now().date()
+        date_calcul = profile.user.date_joined.date() if hasattr(profile.user, 'date_joined') else timezone.now().date()
 
         students_data = [{
             'username': profile.user.username,
@@ -215,13 +316,13 @@ def stats(request):
             'moyenne': profile.moyenne,
             'langues': profile.langues,
             'activites': activites,
-            'score_final': score_final,
+            'score_final': round(score_final, 2),
             'date_calcul': date_calcul,
             'rang': rang,
             'annee': 2025
         }]
 
-        # 🔹 Récupération des candidatures envoyées par l'utilisateur avec statut
+        # Récupération des candidatures envoyées par l'utilisateur avec statut
         candidatures = Candidature.objects.filter(candidat=profile.user).select_related('offre')
 
         return render(request, 'condidatures/stats.html', {

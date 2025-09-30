@@ -1,62 +1,116 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liste des Offres de Stage</title>
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; }
-        .dashboard-container { background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); max-width: 1200px; margin: 0 auto; }
-        h1 { color: #333; text-align: center; }
-        .offers-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        .offers-table th, .offers-table td { padding: 10px; border: 1px solid #ddd; text-align: left; }
-        .offers-table th { background-color: #007bff; color: white; }
-        .offers-table tr:nth-child(even) { background-color: #f2f2f2; }
-        .buttons { text-align: center; margin-top: 20px; }
-        button { padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
-        button:hover { background-color: #0056b3; }
-    </style>
-</head>
-<body>
-    <div class="dashboard-container">
-        <h1>Liste des Offres de Stage</h1>
-        <table class="offers-table">
-            <thead>
-                <tr>
-                    <th>Titre</th>
-                    <th>Entreprise</th>
-                    <th>Localisation</th>
-                    <th>Date Début</th>
-                    <th>Date Fin</th>
-                    <th>Date Publication</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for offre in offres %}
-                <tr>
-                    <td>{{ offre.titre }}</td>
-                    <td>{{ offre.entreprise }}</td>
-                    <td>{{ offre.localisation }}</td>
-                    <td>{{ offre.date_debut|date:"d/m/Y" }}</td>
-                    <td>{{ offre.date_fin|date:"d/m/Y" }}</td>
-                    <td>{{ offre.date_publication|date:"d/m/Y" }}</td>
-                    <td>
-                        <button class="btn-edit" onclick="window.location.href='{% url 'update_offre' offre.id %}'">Mise à jour</button>
-                        <button class="btn-delete" onclick="window.location.href='{% url 'delete_offre' offre.id %}'">Supprimer</button>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="6">Aucune offre pour le moment.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <div class="buttons">
-            <button onclick="window.location.href='{% url 'ajouter_offre' %}'">Ajouter une Offre</button>
-            <button onclick="window.location.href='{% url 'admin_dashboard' %}'">Retour</button>
+{% extends 'condidatures/base.html' %}
+
+{% block title %}Liste des Offres - Mobilité Internationale{% endblock %}
+
+{% block content %}
+<div class="container mt-8">
+    <!-- Header -->
+    <div class="card mb-8">
+        <div class="card-header">
+            <h1 style="margin: 0; display: flex; align-items: center; gap: 0.75rem;">
+                <i class="fas fa-list" style="color: var(--primary-color);"></i>
+                Liste des Offres de Stage
+            </h1>
+        </div>
+        <div class="card-body">
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="{% url 'ajouter_offre' %}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i>
+                    Ajouter une Offre
+                </a>
+                <a href="{% url 'admin_dashboard' %}" class="btn btn-outline">
+                    <i class="fas fa-arrow-left"></i>
+                    Retour au Dashboard
+                </a>
+            </div>
         </div>
     </div>
-</body>
-</html>
+
+    <!-- Offers Table -->
+    <div class="card">
+        <div class="card-header">
+            <h2 style="margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-briefcase" style="color: var(--success-color);"></i>
+                Gestion des Offres
+            </h2>
+        </div>
+        <div class="card-body" style="padding: 0;">
+            {% if offres %}
+                <div style="overflow-x: auto;">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-briefcase"></i> Titre</th>
+                                <th><i class="fas fa-building"></i> Entreprise</th>
+                                <th><i class="fas fa-map-marker-alt"></i> Localisation</th>
+                                <th><i class="fas fa-calendar-plus"></i> Date Début</th>
+                                <th><i class="fas fa-calendar-minus"></i> Date Fin</th>
+                                <th><i class="fas fa-clock"></i> Date Publication</th>
+                                <th><i class="fas fa-cogs"></i> Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for offre in offres %}
+                            <tr>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <div style="width: 32px; height: 32px; background: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.75rem;">
+                                            {{ offre.titre|first|upper }}
+                                        </div>
+                                        <strong>{{ offre.titre }}</strong>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span style="background: var(--gray-100); padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-weight: 500;">{{ offre.entreprise }}</span>
+                                </td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 0.25rem;">
+                                        <i class="fas fa-map-marker-alt" style="color: var(--warning-color); font-size: 0.75rem;"></i>
+                                        {{ offre.localisation }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <span style="background: var(--success-color); color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: bold;">
+                                        {{ offre.date_debut|date:"d/m/Y" }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span style="background: var(--danger-color); color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: bold;">
+                                        {{ offre.date_fin|date:"d/m/Y" }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span style="background: var(--gray-200); padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem;">
+                                        {{ offre.date_publication|date:"d/m/Y" }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div style="display: flex; gap: 0.5rem;">
+                                        <a href="{% url 'update_offre' offre.id %}" class="btn btn-warning" style="padding: 0.5rem 1rem; font-size: 0.75rem;">
+                                            <i class="fas fa-edit"></i> Modifier
+                                        </a>
+                                        <a href="{% url 'delete_offre' offre.id %}" class="btn btn-danger" style="padding: 0.5rem 1rem; font-size: 0.75rem;">
+                                            <i class="fas fa-trash"></i> Supprimer
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center" style="padding: 3rem; color: var(--gray-500);">
+                    <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem; display: block; opacity: 0.5;"></i>
+                    <h3 style="margin-bottom: 0.5rem;">Aucune offre disponible</h3>
+                    <p style="margin-bottom: 1.5rem; opacity: 0.8;">Il n'y a actuellement aucune offre de stage dans le système.</p>
+                    <a href="{% url 'ajouter_offre' %}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
+                        Créer la première offre
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

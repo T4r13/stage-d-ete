@@ -1,205 +1,190 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vos Statistiques</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            height: 100vh;
-            margin: 0;
-            padding-top: 20px;
-        }
-        .stats-container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 1400px;
-            text-align: center;
-            margin: 0 auto;
-        }
-        h1, h2 {
-            color: #333;
-            margin-bottom: 20px;
-        }
-        .stats-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-            background-color: #fff;
-            table-layout: auto;
-        }
-        .stats-table th {
-            background-color: #007bff;
-            color: white;
-            padding: 12px;
-            text-align: left;
-            border-right: 1px solid #0056b3;
-            white-space: nowrap;
-            font-weight: bold;
-        }
-        .stats-table th:last-child {
-            border-right: none;
-        }
-        .stats-table th.separator {
-            border-right: 2px solid #0056b3;
-            background-color: #0069d9;
-            width: 15px;
-            padding: 0;
-        }
-        .stats-table td {
-            padding: 10px 15px;
-            border-bottom: 1px solid #ddd;
-            text-align: left;
-            vertical-align: middle;
-            word-wrap: break-word;
-            overflow: hidden;
-        }
-        .stats-table td.separator {
-            border-right: 2px solid #ddd;
-            width: 15px;
-            padding: 0;
-            background-color: #f2f2f2;
-        }
-        .stats-table tr:hover {
-            background-color: #f8f9fa;
-        }
-        .stats-table tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-        .buttons {
-            margin-top: 20px;
-        }
-        button {
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .charts-container {
-            margin-top: 20px;
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-        }
-        .chart-item {
-            margin: 10px;
-            text-align: center;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            padding: 10px;
-            background-color: #fff;
-        }
-        .chart-item h3 {
-            color: #333;
-            margin-bottom: 10px;
-        }
-    </style>
-</head>
-<body>
-    <div class="stats-container">
-        <h1>Vos Statistiques</h1>
-        <table class="stats-table">
-            <thead>
-                <tr>
-                    <th>Nom d'utilisateur</th>
-                    <th class="separator"></th>
-                    <th>Identifiant</th>
-                    <th class="separator"></th>
-                    <th>Moyenne</th>
-                    <th class="separator"></th>
-                    <th>Langues</th>
-                    <th class="separator"></th>
-                    <th>Activités</th>
-                    <th class="separator"></th>
-                    <th>Score Final</th>
-                    <th class="separator"></th>
-                    <th>Date de Calcul</th>
-                    <th class="separator"></th>
-                    <th>Rang</th>
-                    <th class="separator"></th>
-                    <th>Année</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for student in students_data %}
-                <tr>
-                    <td>{{ student.username }}</td>
-                    <td class="separator"></td>
-                    <td>{{ student.identifiant }}</td>
-                    <td class="separator"></td>
-                    <td>{{ student.moyenne }}</td>
-                    <td class="separator"></td>
-                    <td>{{ student.langues }}</td>
-                    <td class="separator"></td>
-                    <td>{{ student.activites|default:"Aucune activité" }}</td>
-                    <td class="separator"></td>
-                    <td>{{ student.score_final }}</td>
-                    <td class="separator"></td>
-                    <td>{{ student.date_calcul|date:"d/m/Y" }}</td>
-                    <td class="separator"></td>
-                    <td>{{ student.rang }}</td>
-                    <td class="separator"></td>
-                    <td>{{ student.annee }}</td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="17">Aucune donnée disponible.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+{% extends 'condidatures/base.html' %}
 
-        <!-- Section Candidatures -->
-        <h2>Vos Candidatures</h2>
-        {% if candidatures %}
-        <table class="stats-table">
-            <thead>
-                <tr>
-                    <th>Titre de l'offre</th>
-                    <th>Entreprise</th>
-                    <th>Lieu</th>
-                    <th>Date de début</th>
-                    <th>Date de fin</th>
-                    <th>Statut</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for candidature in candidatures %}
-                <tr>
-                    <td>{{ candidature.offre.titre }}</td>
-                    <td>{{ candidature.offre.entreprise }}</td>
-                    <td>{{ candidature.offre.localisation }}</td>
-                    <td>{{ candidature.offre.date_debut|date:"d/m/Y" }}</td>
-                    <td>{{ candidature.offre.date_fin|date:"d/m/Y" }}</td>
-                    <td>{{ candidature.statut|default:"En attente" }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-        <p>Aucune candidature envoyée pour le moment.</p>
-        {% endif %}
+{% block title %}Statistiques - {{ request.user.username }}{% endblock %}
 
-        <div class="buttons">
-            <button onclick="window.location.href='{% url 'profile_details' %}'">Retour</button>
+{% block content %}
+<div class="container mt-8">
+    <!-- Header -->
+    <div class="card mb-8">
+        <div class="card-header">
+            <h1 style="margin: 0; display: flex; align-items: center; gap: 0.75rem;">
+                <i class="fas fa-chart-bar" style="color: var(--primary-color);"></i>
+                Vos Statistiques
+            </h1>
         </div>
-
-        
     </div>
 
-</body>
-</html>
+    <!-- Statistics Overview -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="card red-gradient" style="color: white; border: 2px solid var(--black);">
+            <div class="card-body text-center">
+                <i class="fas fa-users" style="font-size: 2rem; margin-bottom: 0.5rem; opacity: 0.8;"></i>
+                <h3 style="margin: 0; font-size: 2rem;">{{ students_data|length }}</h3>
+                <p style="margin: 0; opacity: 0.8;">Étudiants</p>
+            </div>
+        </div>
+        
+        <div class="card" style="background: var(--black); color: white; border: 2px solid var(--primary-color);">
+            <div class="card-body text-center">
+                <i class="fas fa-file-alt" style="font-size: 2rem; margin-bottom: 0.5rem; opacity: 0.8; color: var(--primary-color);"></i>
+                <h3 style="margin: 0; font-size: 2rem;">{{ candidatures|length }}</h3>
+                <p style="margin: 0; opacity: 0.8;">Candidatures</p>
+            </div>
+        </div>
+        
+        <div class="card" style="background: var(--white); color: var(--black); border: 2px solid var(--black);">
+            <div class="card-body text-center">
+                <i class="fas fa-chart-line" style="font-size: 2rem; margin-bottom: 0.5rem; opacity: 0.8; color: var(--primary-color);"></i>
+                <h3 style="margin: 0; font-size: 2rem; color: var(--black);">{{ profile.moyenne|default:"N/A" }}</h3>
+                <p style="margin: 0; opacity: 0.8; color: var(--black);">Moyenne</p>
+            </div>
+        </div>
+        
+        <div class="card" style="background: var(--primary-color); color: white; border: 2px solid var(--black);">
+            <div class="card-body text-center">
+                <i class="fas fa-trophy" style="font-size: 2rem; margin-bottom: 0.5rem; opacity: 0.8;"></i>
+                <h3 style="margin: 0; font-size: 2rem;">{{ profile.rang|default:"N/A" }}</h3>
+                <p style="margin: 0; opacity: 0.8;">Rang</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Students Data Table -->
+    <div class="card mb-8">
+        <div class="card-header">
+            <h2 style="margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-user-graduate" style="color: var(--primary-color);"></i>
+                Classement des Étudiants
+            </h2>
+        </div>
+        <div class="card-body" style="padding: 0;">
+            {% if students_data %}
+                <div style="overflow-x: auto;">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-user"></i> Nom d'utilisateur</th>
+                                <th><i class="fas fa-id-card"></i> Identifiant</th>
+                                <th><i class="fas fa-chart-line"></i> Moyenne</th>
+                                <th><i class="fas fa-language"></i> Langues</th>
+                                <th><i class="fas fa-running"></i> Activités</th>
+                                <th><i class="fas fa-star"></i> Score Final</th>
+                                <th><i class="fas fa-calendar"></i> Date de Calcul</th>
+                                <th><i class="fas fa-trophy"></i> Rang</th>
+                                <th><i class="fas fa-calendar-alt"></i> Année</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in students_data %}
+                            <tr {% if student.username == request.user.username %}style="background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(29, 78, 216, 0.1)); border-left: 4px solid var(--primary-color);"{% endif %}>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <div style="width: 32px; height: 32px; background: {% if student.username == request.user.username %}var(--primary-color){% else %}var(--gray-400){% endif %}; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                                            {{ student.username|first|upper }}
+                                        </div>
+                                        <span {% if student.username == request.user.username %}style="font-weight: bold; color: var(--primary-color);"{% endif %}>{{ student.username }}</span>
+                                        {% if student.username == request.user.username %}
+                                            <span style="background: var(--primary-color); color: white; padding: 0.25rem 0.5rem; border-radius: 1rem; font-size: 0.75rem; font-weight: bold;">VOUS</span>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td><span style="background: var(--gray-100); padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-family: monospace;">{{ student.identifiant }}</span></td>
+                                <td>
+                                    <span style="background: {% if student.moyenne >= 15 %}var(--success-color){% elif student.moyenne >= 12 %}var(--warning-color){% else %}var(--danger-color){% endif %}; color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-weight: bold;">
+                                        {{ student.moyenne|default:"N/A" }}
+                                    </span>
+                                </td>
+                                <td>{{ student.langues|default:"N/A" }}</td>
+                                <td>{{ student.activites|default:"Aucune activité" }}</td>
+                                <td>
+                                    <span style="background: var(--primary-color); color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-weight: bold;">
+                                        {{ student.score_final|default:"N/A" }}
+                                    </span>
+                                </td>
+                                <td>{{ student.date_calcul|date:"d/m/Y" }}</td>
+                                <td>
+                                    <span style="background: var(--gray-200); padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-weight: bold;">
+                                        {{ student.rang|default:"N/A" }}
+                                    </span>
+                                </td>
+                                <td>{{ student.annee }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center" style="padding: 3rem; color: var(--gray-500);">
+                    <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem; display: block; opacity: 0.5;"></i>
+                    <h3 style="margin-bottom: 0.5rem;">Aucune donnée disponible</h3>
+                    <p style="margin: 0; opacity: 0.8;">Les statistiques ne sont pas encore disponibles.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Applications Section -->
+    <div class="card mb-8">
+        <div class="card-header">
+            <h2 style="margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-file-alt" style="color: var(--success-color);"></i>
+                Vos Candidatures
+            </h2>
+        </div>
+        <div class="card-body" style="padding: 0;">
+            {% if candidatures %}
+                <div style="overflow-x: auto;">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-briefcase"></i> Titre de l'offre</th>
+                                <th><i class="fas fa-building"></i> Entreprise</th>
+                                <th><i class="fas fa-map-marker-alt"></i> Lieu</th>
+                                <th><i class="fas fa-calendar-plus"></i> Date de début</th>
+                                <th><i class="fas fa-calendar-minus"></i> Date de fin</th>
+                                <th><i class="fas fa-info-circle"></i> Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for candidature in candidatures %}
+                            <tr>
+                                <td><strong>{{ candidature.offre.titre }}</strong></td>
+                                <td>{{ candidature.offre.entreprise }}</td>
+                                <td>{{ candidature.offre.localisation }}</td>
+                                <td>{{ candidature.offre.date_debut|date:"d/m/Y" }}</td>
+                                <td>{{ candidature.offre.date_fin|date:"d/m/Y" }}</td>
+                                <td>
+                                    <span style="background: {% if candidature.statut == 'acceptee' %}var(--success-color){% elif candidature.statut == 'refusee' %}var(--danger-color){% else %}var(--warning-color){% endif %}; color: white; padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.75rem; font-weight: bold; text-transform: uppercase;">
+                                        {{ candidature.statut|default:"En attente" }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center" style="padding: 3rem; color: var(--gray-500);">
+                    <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem; display: block; opacity: 0.5;"></i>
+                    <h3 style="margin-bottom: 0.5rem;">Aucune candidature</h3>
+                    <p style="margin-bottom: 1.5rem; opacity: 0.8;">Vous n'avez envoyé aucune candidature pour le moment.</p>
+                    <a href="{% url 'profile_details' %}" class="btn btn-primary">
+                        <i class="fas fa-briefcase"></i>
+                        Voir les offres disponibles
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="card">
+        <div class="card-body text-center">
+            <a href="{% url 'profile_details' %}" class="btn btn-primary">
+                <i class="fas fa-arrow-left"></i>
+                Retour au Profil
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

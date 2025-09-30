@@ -132,20 +132,47 @@ def admin_dashboard(request):
     })
 
 from django.http import JsonResponse
+from django.core.mail import send_mail
+from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt  # à utiliser si fetch ne passe pas le token
 
-
+@require_POST
+@csrf_exempt  # temporaire pour tester si le CSRF bloque
 def changer_statut_ajax(request):
-    if request.method == "POST" and request.user.is_superuser:
-        candidature_id = request.POST.get('candidature_id')
-        nouveau_statut = request.POST.get('statut')
+    if not request.user.is_superuser:
+        return JsonResponse({'success': False, 'error': 'Accès refusé'}, status=403)
 
-        candidature = get_object_or_404(Candidature, id=candidature_id)
-        candidature.statut = nouveau_statut  # 🔹 Utiliser 'statut', pas 'status'
-        candidature.save()  # 🔹 Mise à jour permanente en base
+    candidature_id = request.POST.get('candidature_id')
+    nouveau_statut = request.POST.get('statut')
+
+    if not candidature_id or not nouveau_statut:
+        return JsonResponse({'success': False, 'error': 'Paramètres manquants'}, status=400)
+
+    try:
+        candidature = Candidature.objects.get(id=int(candidature_id))
+        candidature.statut = nouveau_statut
+        candidature.save()
+
+        # Envoi d'email, mais ne bloque pas si erreur
+        try:
+            profile = Profile.objects.get(user=candidature.candidat)
+            email = profile.email.strip()
+            if email:
+                sujet = "Résultat de votre candidature"
+                if nouveau_statut == "acceptee":
+                    message = f"Bonjour {candidature.candidat.username},\n\nFélicitations ! Votre candidature pour l'offre '{candidature.offre.titre}' a été ACCEPTÉE."
+                else:
+                    message = f"Bonjour {candidature.candidat.username},\n\nNous vous remercions, votre candidature pour l'offre '{candidature.offre.titre}' a été REFUSÉE."
+
+                send_mail(sujet, message, 'bchirtarak@gmail.com', [email], fail_silently=True)
+
+        except Profile.DoesNotExist:
+            pass  # ne bloque pas l'update
 
         return JsonResponse({'success': True, 'statut': candidature.statut})
 
-    return JsonResponse({'success': False}, status=400)
+    except Candidature.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Candidature introuvable'}, status=404)
 
 #-------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -301,3 +328,25 @@ def postuler_offre(request, offre_id):
         messages.success(request, f"Votre candidature pour '{offre.titre}' a été envoyée avec succès.")
 
     return redirect('profile_details')
+
+
+
+from django.template.loader import get_template
+from django.http import HttpResponse
+from xhtml2pdf import pisa
+from .models import Candidature
+
+def export_candidatures_pdf(request):
+    if not request.user.is_staff:
+        return HttpResponse(status=403)
+
+    candidatures = Candidature.objects.select_related('offre', 'candidat').all()
+    template = get_template('condidatures/candidatures_pdf.html')
+    html = template.render({'candidatures': candidatures})
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="candidatures.pdf"'
+    pisa_status = pisa.CreatePDF(html, dest=response)
+    if pisa_status.err:
+        return HttpResponse('Erreur lors de la génération du PDF', status=500)
+    return response

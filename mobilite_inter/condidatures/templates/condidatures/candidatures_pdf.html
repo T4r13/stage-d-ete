@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: DejaVu Sans, sans-serif; font-size: 12px; }
+        h1 { text-align: center; margin-bottom: 16px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #333; padding: 6px; }
+        th { background: #eee; }
+    </style>
+</head>
+<body>
+    <h1>Liste des candidatures</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Candidat</th>
+                <th>Offre</th>
+                <th>Entreprise</th>
+                <th>Date</th>
+                <th>Statut</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in candidatures %}
+            <tr>
+                <td>{{ c.candidat.username }}</td>
+                <td>{{ c.offre.titre }}</td>
+                <td>{{ c.offre.entreprise }}</td>
+                <td>{{ c.date_candidature|date:"d/m/Y" }}</td>
+                <td>{{ c.statut|default:"En attente" }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5">Aucune candidature.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

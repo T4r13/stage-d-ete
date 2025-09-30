@@ -5,6 +5,7 @@ from django.db import models
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     identifiant = models.CharField(max_length=20, unique=True)
+    email = models.EmailField(unique=True,null=True, blank=True)  
     moyenne = models.FloatField()
     langues = models.CharField(max_length=100)
     activites = models.TextField(blank=True)

@@ -16,5 +16,7 @@ urlpatterns = [
     path('offres/update/<int:id>/', views.update_offre_stage, name='update_offre'),
     path('offres/delete/<int:id>/', views.delete_offre_stage, name='delete_offre'),
     path('postuler/<int:offre_id>/', views.postuler_offre, name='postuler_offre'),
+    path('candidatures/export/pdf/', views.export_candidatures_pdf, name='export_candidatures_pdf'),
+
 
 ]
